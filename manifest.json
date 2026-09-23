@@ -3,7 +3,7 @@
   "name": "Living Proxy",
   "short_name": "Living Proxy",
   "description": "Быстрое переключение прокси. Живая тема, сезонные эффекты, умные исключения.",
-  "version": "7.4",
+  "version": "7.5",
   "author": "Beccalviso",
   "homepage_url": "https://github.com/Becca-hubx/Living-Proxy",
   "minimum_chrome_version": "130",

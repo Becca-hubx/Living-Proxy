@@ -409,7 +409,7 @@ h2.section-title {
   color: var(--ui-text);
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
-  opacity: 0.75;
+  opacity: 0.9;
 }
 
 .ctrl-btn:hover,
@@ -462,7 +462,7 @@ h2.section-title {
   color: var(--ui-text);
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
-  opacity: 0.75;
+  opacity: 0.9;
 }
 
 .scheme-preview-btn:hover {
@@ -923,7 +923,7 @@ h2.section-title {
   font-family: inherit;
   letter-spacing: 0.5px;
   color: var(--text-color);
-  opacity: 0.6;
+  opacity: 0.9;
   cursor: pointer;
   transition: opacity 0.25s ease, color 0.25s ease;
   position: relative;
@@ -1355,7 +1355,7 @@ h2.section-title {
   color: var(--text-color);
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s;
-  opacity: 0.6;
+  opacity: 0.9;
   position: relative;
   overflow: hidden;
 }
@@ -1391,7 +1391,7 @@ h2.section-title {
   color: var(--text-color);
   cursor: pointer;
   transition: all 0.3s;
-  opacity: 0.6;
+  opacity: 0.9;
   position: relative;
   overflow: hidden;
 }
@@ -1443,7 +1443,7 @@ h2.section-title {
   justify-content: space-between;
   gap: 0.5rem;
   font-size: 0.55rem;
-  opacity: 0.6;
+  opacity: 1;
   padding: 0.2rem 0.2rem 0;
   border-top: 1px solid var(--input-border);
   margin-top: 0.2rem;
@@ -1505,7 +1505,7 @@ h2.section-title {
   margin-top: 0.6rem;
   color: var(--text-color);
   font-size: 0.55rem;
-  opacity: 0.6;
+  opacity: 1;
   letter-spacing: 0.3px;
   font-weight: 400;
 }
@@ -1522,7 +1522,7 @@ h2.section-title {
   color: var(--text-color);
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s, transform 0.15s;
-  opacity: 0.7;
+  opacity: 0.9;
   position: relative;
   overflow: hidden;
   white-space: nowrap;
