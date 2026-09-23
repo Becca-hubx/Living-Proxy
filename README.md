@@ -99,7 +99,3 @@ A Chrome extension that makes proxy management simple and pleasant. The theme ch
 3. Open `chrome://extensions/` in Chrome.
 4. Enable **Developer mode**.
 5. Click **Load unpacked** and choose the unzipped folder.
-
-## License
-
-MIT
