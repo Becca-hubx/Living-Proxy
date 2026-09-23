@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Прокси</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Слой сезонных частиц на фоне -->
+  <div class="particles-layer" id="particlesLayer" aria-hidden="true"></div>
+
+  <div class="popup">
+    <!-- Баннер обновления -->
+    <div id="updateBanner" class="update-banner" style="display:none;">
+      <span class="update-banner-icon">⬆</span>
+      <span class="update-banner-text">
+        <span data-i18n="updateAvailable">Доступна версия</span>
+        <span id="updateBannerVersion" class="update-banner-version"></span>
+      </span>
+      <span class="update-banner-open" data-i18n="updateOpen">Обновить</span>
+      <button type="button" id="updateBannerClose" class="update-banner-close" title="">✕</button>
+    </div>
+
+    <!-- Вкладка ПРОКСИ -->
+    <div class="tab-content active" id="tabProxy">
+      <div class="tile tile-large" id="mainTile">
+        <!-- Сезонная печать: крупный полупрозрачный силуэт справа -->
+        <div class="tile-seal" id="tileSeal" aria-hidden="true"></div>
+        <div class="tile-content">
+          <div class="tile-title" id="tileTitle" data-i18n="proxyTitle">ПРОКСИ</div>
+          <div class="tile-status" id="statusText">ВЫКЛЮЧЕН</div>
+          <div class="tile-host" id="hostDisplay" data-i18n="notConfigured">не настроено</div>
+          <div class="real-ip" id="realIpContainer">
+            <span class="ip-label" data-i18n="yourIp">Ваш IP</span>
+            <span class="flag" id="flagDisplay">🌍</span>
+            <span class="ip-value" id="realIpValue">—</span>
+            <button class="ip-refresh-btn" id="refreshIpBtn" title="Обновить IP">↻</button>
+          </div>
+          <div class="ping-container" id="pingContainer">
+            <span class="ping-label" data-i18n="ping">Задержка</span>
+            <span class="ping-value" id="pingValue">—</span>
+            <span class="ping-unit">мс</span>
+            <span class="ping-dot" id="pingDot"></span>
+          </div>
+          <div class="ping-chart" id="pingChart"></div>
+        </div>
+        <div class="status-indicator" id="statusIndicator"></div>
+        <span class="ripple-effect"></span>
+      </div>
+    </div>
+
+    <!-- Вкладка НАСТРОЙКИ -->
+    <div class="tab-content" id="tabSettings" style="display:none;">
+
+      <!-- Исключения -->
+      <div class="tile tile-wide" id="exceptionsTile">
+        <div class="tile-header" id="accordionHeader">
+          <span class="tile-title" data-i18n="exceptionsTitle">ИСКЛЮЧЕНИЯ</span>
+        </div>
+        <div class="tile-body" id="accordionBody">
+          <div class="tags-input-container">
+            <div class="tag-input-row">
+              <input type="text" id="tagInput" placeholder="" data-i18n-placeholder="inputPlaceholder" />
+              <button class="add-tag-btn" id="addTagBtn">+</button>
+            </div>
+            <div class="input-hint" data-i18n="hintDomain">Допустимы: домен (example.com) или IPv4 (192.168.1.1)</div>
+            <div class="tags-container" id="tagsContainer"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Настройки прокси -->
+      <div class="tile tile-wide" id="settingsAccordion">
+        <div class="tile-header" id="settingsHeader">
+          <span class="tile-title" data-i18n="settingsTitle">НАСТРОЙКИ ПРОКСИ</span>
+        </div>
+        <div class="tile-body" id="settingsBody">
+          <div class="field">
+            <label data-i18n="optionsIpLabel">IP-адрес или домен</label>
+            <input type="text" id="proxyHostInput" data-i18n-placeholder="optionsIpPlaceholder">
+          </div>
+          <div class="field">
+            <label data-i18n="optionsPortLabel">Порт</label>
+            <input type="number" id="proxyPortInput" data-i18n-placeholder="optionsPortPlaceholder">
+          </div>
+          <button class="save-btn" id="saveOptionsBtn" data-i18n="optionsSaveBtn">Сохранить</button>
+        </div>
+      </div>
+
+      <!-- Логи ошибок -->
+      <div class="tile tile-wide" id="logsAccordion">
+        <div class="tile-header" id="logsHeader">
+          <span class="tile-title" data-i18n="logsTitle">ЛОГИ ОШИБОК</span>
+        </div>
+        <div class="tile-body" id="logsBody">
+          <div class="logs-container">
+            <div class="logs-list" id="logsList"></div>
+            <div class="logs-actions">
+              <button class="logs-btn" id="copyLogsBtn" data-i18n="copyLogs">Копировать логи</button>
+              <button class="logs-btn" id="clearLogsBtn" data-i18n="clearLogs">Очистить логи</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Язык (единственный селектор) -->
+      <div class="selector-group">
+        <span data-i18n="languageLabel">Язык</span>
+        <div class="btn-group">
+          <button class="lang-btn" data-lang="ru" data-i18n="langRu">Русский</button>
+          <button class="lang-btn" data-lang="en" data-i18n="langEn">English</button>
+          <button class="lang-btn" data-lang="auto" data-i18n="langAuto">Авто</button>
+        </div>
+      </div>
+
+      <!-- Цветовая схема -->
+      <div class="selector-group" id="schemeGroup">
+        <span data-i18n="colorSchemeLabel">Цветовая схема</span>
+        <div class="btn-group scheme-group">
+          <button class="scheme-btn active" data-scheme="standard" data-i18n="colorSchemeStandard">Стандартная</button>
+          <button class="scheme-btn" data-scheme="pastel" data-i18n="colorSchemePastel">Пастель</button>
+          <button class="scheme-btn" data-scheme="contrast" data-i18n="colorSchemeContrast">Контраст</button>
+        </div>
+      </div>
+
+      <!-- Секция «Эффекты» -->
+      <div class="effects-group">
+        <div class="effect-row">
+          <span data-i18n="effectParticles">Сезонные частицы</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggleParticles" checked>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+        <div class="effect-row">
+          <span data-i18n="effectJoy">Анимация включения</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggleJoy" checked>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Версия + проверка обновлений -->
+      <div class="settings-version">
+        <span class="version-label">v<span id="versionText"></span></span>
+        <button type="button" id="checkUpdatesBtn" class="check-updates-btn" data-i18n="updateCheckBtn">Проверить обновления</button>
+      </div>
+    </div>
+
+    <!-- Футер: таблетка-слайдер + сезон + автор + кнопка помощи -->
+    <div class="popup-footer">
+      <div class="tabs">
+        <span class="tabs-indicator" id="tabsIndicator" aria-hidden="true"></span>
+        <button class="tab-btn active" data-tab="proxy" data-i18n="tabProxy">Прокси</button>
+        <button class="tab-btn" data-tab="settings" data-i18n="tabSettings">Настройки</button>
+      </div>
+      <span id="seasonIndicator" class="season-indicator"></span>
+      <span class="author">by Beccalviso</span>
+      <button id="helpBtn" class="help-btn" title="Пошаговая инструкция">i</button>
+    </div>
+  </div>
+
+  <!-- ===== Туториал: микро-подсказки с ореолом и стрелкой ===== -->
+  <div id="tutorialOverlay" class="tutorial-overlay" style="display:none;">
+    <!-- Ореол вокруг целевого элемента (тёмный фон через box-shadow) -->
+    <div class="tutorial-spotlight" id="tutorialSpotlight"></div>
+
+    <!-- Стрелка-указатель от окна к элементу -->
+    <div class="tutorial-arrow" id="tutorialArrow"></div>
+
+    <!-- Окно туториала — внизу попапа -->
+    <div class="tutorial-box" id="tutorialBox">
+      <!-- Прогресс-бар -->
+      <div class="tutorial-progress">
+        <div class="tutorial-progress-bar" id="tutorialProgressBar"></div>
+      </div>
+
+      <div class="tutorial-content" id="tutorialContent">
+        <span class="tutorial-icon" id="tutorialIcon">👋</span>
+        <div class="tutorial-texts">
+          <h2 id="tutorialTitle"></h2>
+          <p id="tutorialText"></p>
+        </div>
+      </div>
+
+      <div class="tutorial-nav">
+        <button class="tutorial-btn tutorial-prev" id="tutorialPrev"></button>
+        <div class="tutorial-dots" id="tutorialDots"></div>
+        <button class="tutorial-btn tutorial-next" id="tutorialNext"></button>
+      </div>
+
+      <button class="tutorial-skip" id="tutorialSkip"></button>
+    </div>
+  </div>
+
+  <!-- Toast (Popover API) -->
+  <div id="toast" class="toast" popover="manual">
+    <span class="toast-icon"></span>
+    <span class="toast-text"></span>
+    <span class="toast-progress"></span>
+  </div>
+
+  <!-- Скрипты -->
+  <script src="locales.js"></script>
+  <script src="tutorial.js"></script>
+  <script src="themes.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
