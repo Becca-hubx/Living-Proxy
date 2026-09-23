@@ -55,12 +55,6 @@
 
 ---
 
-## Лицензия
-
-MIT
-
----
-
 ## Автор
 
 **Beccalviso** — [github.com/Becca-hubx](https://github.com/Becca-hubx)
