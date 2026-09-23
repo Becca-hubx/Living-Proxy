@@ -8,445 +8,533 @@
 </head>
 <body>
 
-  <h1>Живая тема — превью</h1>
+<div class="preview-layout">
 
-  <!-- ===== Панель управления ===== -->
-  <div class="controls">
-    <div class="slider-wrap">
-      <input type="range" id="timeSlider" min="0" max="1439" step="1" value="720">
-      <span class="now-marker" id="nowMarker" aria-hidden="true"></span>
-    </div>
-    <span class="time-display" id="timeDisplay">12:00</span>
-    <button class="ctrl-btn" id="nowBtn" title="Перейти к текущему времени">Сейчас</button>
-    <button class="ctrl-btn" id="playBtn" title="Воспроизвести сутки">▶</button>
-    <div class="seasons">
-      <button class="season-btn" data-season="winter">Зима</button>
-      <button class="season-btn" data-season="spring">Весна</button>
-      <button class="season-btn" data-season="summer">Лето</button>
-      <button class="season-btn" data-season="autumn">Осень</button>
-    </div>
-  </div>
+  <!-- ============================================================
+       ЛЕВАЯ КОЛОНКА: копия попапа + витрина секций
+       ============================================================ -->
+  <main class="preview-main">
 
-  <!-- ===== Выбор цветовой схемы (для теста) ===== -->
-  <div class="scheme-bar">
-    <span class="scheme-bar-label">Цветовая схема:</span>
-    <button type="button" class="scheme-preview-btn active" data-scheme="standard">Стандарт</button>
-    <button type="button" class="scheme-preview-btn" data-scheme="pastel">Пастель</button>
-    <button type="button" class="scheme-preview-btn" data-scheme="contrast">Контраст</button>
-  </div>
+    <!-- ===== Копия попапа ===== -->
+    <div class="fake-popup-wrap">
+      <div class="fake-popup theme-surface" id="fakePopup">
 
-  <!-- ===== Информационная строка ===== -->
-  <div class="info-bar">
-    <span id="infoTime">—</span>
-    <span class="info-sep">·</span>
-    <span id="infoSeason">—</span>
-    <span class="info-sep">·</span>
-    <span id="infoDayNight">—</span>
-    <span class="info-sep">·</span>
-    <span id="infoNextChange">—</span>
-  </div>
+        <div class="particles-layer" id="fakeParticlesLayer" aria-hidden="true"></div>
 
-  <!-- ===== Копия попапа ===== -->
-  <h2 class="section-title">Копия попапа</h2>
-  <div class="fake-popup-wrap">
-    <div class="fake-popup theme-surface" id="fakePopup">
+        <div class="popup">
 
-      <!-- Слой сезонных частиц -->
-      <div class="particles-layer" id="fakeParticlesLayer" aria-hidden="true"></div>
-
-      <div class="popup">
-
-        <!-- Вкладка ПРОКСИ -->
-        <div class="tab-content active" data-fake-content="proxy">
-          <div class="tile tile-large active">
-            <div class="tile-seal" aria-hidden="true"></div>
-            <div class="tile-content">
-              <div class="tile-title">ПРОКСИ</div>
-              <div class="tile-status">ВКЛЮЧЕН</div>
-              <div class="tile-host">127.0.0.1:8080</div>
-              <div class="real-ip">
-                <span class="ip-label">Ваш IP</span>
-                <span class="flag">🌍</span>
-                <span class="ip-value">8.8.8.8</span>
-                <button class="ip-refresh-btn" type="button">↻</button>
+          <!-- Вкладка ПРОКСИ -->
+          <div class="tab-content active" data-fake-content="proxy">
+            <div class="tile tile-large" id="fakeMainTile">
+              <div class="tile-seal" aria-hidden="true"></div>
+              <div class="tile-content">
+                <div class="tile-title" data-i18n="proxyTitle">ПРОКСИ</div>
+                <div class="tile-status" id="fakeStatusText">ВЫКЛЮЧЕН</div>
+                <div class="tile-host" id="fakeHostDisplay">не настроено</div>
+                <div class="real-ip" id="fakeRealIpContainer">
+                  <span class="ip-label" data-i18n="yourIp">Ваш IP</span>
+                  <span class="flag" id="fakeFlagDisplay">🌍</span>
+                  <span class="ip-value" id="fakeRealIpValue">—</span>
+                  <button class="ip-refresh-btn" id="fakeRefreshIpBtn" type="button">↻</button>
+                </div>
+                <div class="ping-container">
+                  <span class="ping-label" data-i18n="ping">Задержка</span>
+                  <span class="ping-value" id="fakePingValue">—</span>
+                  <span class="ping-unit">мс</span>
+                  <span class="ping-dot" id="fakePingDot"></span>
+                </div>
+                <div class="ping-chart" id="fakePingChart"></div>
               </div>
-              <div class="ping-container">
-                <span class="ping-label">Задержка</span>
-                <span class="ping-value">120</span>
-                <span class="ping-unit">мс</span>
-                <span class="ping-dot active"></span>
-              </div>
-              <div class="ping-chart"></div>
+              <div class="status-indicator" id="fakeStatusIndicator"></div>
             </div>
-            <div class="status-indicator"></div>
           </div>
+
+          <!-- Вкладка НАСТРОЙКИ -->
+          <div class="tab-content" data-fake-content="settings" style="display:none;">
+
+            <!-- Исключения -->
+            <div class="tile tile-wide">
+              <div class="tile-header">
+                <span class="tile-title" data-i18n="exceptionsTitle">ИСКЛЮЧЕНИЯ</span>
+              </div>
+              <div class="tile-body open">
+                <div class="tags-input-container">
+                  <div class="tag-input-row">
+                    <input type="text" id="fakeTagInput" data-i18n-placeholder="inputPlaceholder">
+                    <button class="add-tag-btn" id="fakeAddTagBtn" type="button">+</button>
+                  </div>
+                  <div class="input-hint" data-i18n="hintDomain">Допустимы: домен (example.com) или IPv4 (192.168.1.1)</div>
+                  <div class="tags-container" id="fakeTagsContainer"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Настройки прокси -->
+            <div class="tile tile-wide">
+              <div class="tile-header">
+                <span class="tile-title" data-i18n="settingsTitle">НАСТРОЙКИ ПРОКСИ</span>
+              </div>
+              <div class="tile-body open">
+                <div class="field">
+                  <label data-i18n="optionsIpLabel">IP-адрес или домен</label>
+                  <input type="text" id="fakeProxyHostInput" data-i18n-placeholder="optionsIpPlaceholder">
+                </div>
+                <div class="field">
+                  <label data-i18n="optionsPortLabel">Порт</label>
+                  <input type="number" id="fakeProxyPortInput" data-i18n-placeholder="optionsPortPlaceholder">
+                </div>
+                <button class="save-btn" id="fakeSaveBtn" data-i18n="optionsSaveBtn" type="button">Сохранить</button>
+              </div>
+            </div>
+
+            <!-- Логи ошибок -->
+            <div class="tile tile-wide">
+              <div class="tile-header">
+                <span class="tile-title" data-i18n="logsTitle">ЛОГИ ОШИБОК</span>
+              </div>
+              <div class="tile-body open">
+                <div class="logs-container">
+                  <div class="logs-list" id="fakeLogsList"></div>
+                  <div class="logs-actions">
+                    <button class="logs-btn" id="fakeCopyLogsBtn" data-i18n="copyLogs" type="button">Копировать логи</button>
+                    <button class="logs-btn" id="fakeClearLogsBtn" data-i18n="clearLogs" type="button">Очистить логи</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Язык -->
+            <div class="selector-group">
+              <span data-i18n="languageLabel">Язык</span>
+              <div class="btn-group">
+                <button class="lang-btn" data-lang="ru" data-i18n="langRu" type="button">Русский</button>
+                <button class="lang-btn" data-lang="en" data-i18n="langEn" type="button">English</button>
+                <button class="lang-btn active" data-lang="auto" data-i18n="langAuto" type="button">Авто</button>
+              </div>
+            </div>
+
+            <!-- Цветовая схема -->
+            <div class="selector-group">
+              <span data-i18n="colorSchemeLabel">Цветовая схема</span>
+              <div class="btn-group scheme-group">
+                <button class="scheme-btn active" data-scheme="standard" data-i18n="colorSchemeStandard" type="button">Стандартная</button>
+                <button class="scheme-btn" data-scheme="pastel" data-i18n="colorSchemePastel" type="button">Пастель</button>
+                <button class="scheme-btn" data-scheme="contrast" data-i18n="colorSchemeContrast" type="button">Контраст</button>
+              </div>
+            </div>
+
+            <!-- Эффекты -->
+            <div class="effects-group">
+              <div class="effect-row">
+                <span data-i18n="effectParticles">Сезонные частицы</span>
+                <label class="toggle">
+                  <input type="checkbox" id="fakeToggleParticles" checked>
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="effect-row">
+                <span data-i18n="effectJoy">Анимация включения</span>
+                <label class="toggle">
+                  <input type="checkbox" id="fakeToggleJoy" checked>
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Версия -->
+            <div class="settings-version">
+              <span class="version-label">v0.0.0</span>
+              <button type="button" class="check-updates-btn" data-i18n="updateCheckBtn">Проверить обновления</button>
+            </div>
+          </div>
+
+          <!-- Футер -->
+          <div class="popup-footer">
+            <div class="tabs" id="fakeTabs">
+              <span class="tabs-indicator" id="fakeTabsIndicator" aria-hidden="true"></span>
+              <button class="tab-btn active" type="button" data-fake-tab="proxy" data-i18n="tabProxy">Прокси</button>
+              <button class="tab-btn" type="button" data-fake-tab="settings" data-i18n="tabSettings">Настройки</button>
+            </div>
+            <span class="season-indicator" id="fakeSeasonIndicator">🍂</span>
+            <span class="author">by Beccalviso</span>
+            <button class="help-btn" type="button">i</button>
+          </div>
+
         </div>
+      </div>
+    </div>
 
-        <!-- Вкладка НАСТРОЙКИ -->
-        <div class="tab-content" data-fake-content="settings" style="display:none;">
+    <!-- ===== Витрина ===== -->
+    <div class="showcase">
 
-          <!-- Исключения -->
-          <div class="tile tile-wide">
-            <div class="tile-header">
-              <span class="tile-title">ИСКЛЮЧЕНИЯ</span>
+      <!-- Сравнение сезонов — открыта -->
+      <section class="showcase-section" data-section="seasons">
+        <button class="showcase-header" type="button">
+          <span>Сравнение сезонов</span>
+          <span class="showcase-chevron">▾</span>
+        </button>
+        <div class="showcase-body open">
+          <div class="season-compare" id="seasonCompare"></div>
+        </div>
+      </section>
+
+      <!-- Элементы интерфейса — свёрнута -->
+      <section class="showcase-section collapsed" data-section="elements">
+        <button class="showcase-header" type="button">
+          <span>Элементы интерфейса</span>
+          <span class="showcase-chevron">▾</span>
+        </button>
+        <div class="showcase-body">
+          <div class="elements-preview theme-surface" id="elementsPreview">
+
+            <div class="el-card">
+              <div class="el-label">Таблетка (Прокси)</div>
+              <div class="tabs" data-indicator-auto>
+                <span class="tabs-indicator"></span>
+                <button class="tab-btn active" type="button">Прокси</button>
+                <button class="tab-btn" type="button">Настройки</button>
+              </div>
             </div>
-            <div class="tile-body open">
-              <div class="tags-input-container">
-                <div class="tag-input-row">
-                  <input type="text" placeholder="Введите домен или IP и нажмите Enter">
-                  <button class="add-tag-btn" type="button">+</button>
-                </div>
-                <div class="input-hint">Допустимы: домен (example.com) или IPv4 (192.168.1.1)</div>
-                <div class="tags-container">
-                  <span class="tag">example.com<span class="tag-remove">×</span></span>
-                  <span class="tag">192.168.1.1<span class="tag-remove">×</span></span>
+
+            <div class="el-card">
+              <div class="el-label">Таблетка (Настройки)</div>
+              <div class="tabs" data-indicator-auto>
+                <span class="tabs-indicator"></span>
+                <button class="tab-btn" type="button">Прокси</button>
+                <button class="tab-btn active" type="button">Настройки</button>
+              </div>
+            </div>
+
+            <div class="el-card">
+              <div class="el-label">Toggle — вкл</div>
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              </label>
+            </div>
+
+            <div class="el-card">
+              <div class="el-label">Toggle — выкл</div>
+              <label class="toggle">
+                <input type="checkbox">
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              </label>
+            </div>
+
+            <div class="el-card">
+              <div class="el-label">Аккордеон закрытый</div>
+              <div class="tile tile-wide">
+                <div class="tile-header"><span class="tile-title">ИСКЛЮЧЕНИЯ</span></div>
+              </div>
+            </div>
+
+            <div class="el-card">
+              <div class="el-label">Аккордеон открытый</div>
+              <div class="tile tile-wide">
+                <div class="tile-header"><span class="tile-title">ИСКЛЮЧЕНИЯ</span></div>
+                <div class="tile-body open" style="max-height:200px;padding:0.5rem 0.7rem 0.7rem;">
+                  <div class="tag-input-row">
+                    <input type="text" placeholder="example.com">
+                    <button class="add-tag-btn" type="button">+</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Настройки прокси -->
-          <div class="tile tile-wide">
-            <div class="tile-header">
-              <span class="tile-title">НАСТРОЙКИ ПРОКСИ</span>
-            </div>
-            <div class="tile-body open">
+            <div class="el-card">
+              <div class="el-label">Поле ввода (focus)</div>
               <div class="field">
                 <label>IP-адрес или домен</label>
-                <input type="text" value="127.0.0.1">
+                <input type="text" value="127.0.0.1" placeholder=" " class="demo-focus">
               </div>
-              <div class="field">
-                <label>Порт</label>
-                <input type="number" value="8080">
-              </div>
+            </div>
+
+            <div class="el-card">
+              <div class="el-label">Кнопка «Сохранить»</div>
               <button class="save-btn" type="button">Сохранить</button>
             </div>
-          </div>
 
-          <!-- Логи ошибок -->
-          <div class="tile tile-wide">
-            <div class="tile-header">
-              <span class="tile-title">ЛОГИ ОШИБОК</span>
-            </div>
-            <div class="tile-body open">
-              <div class="logs-container">
-                <div class="logs-list">
-                  <div class="log-entry">
-                    <span class="log-time">14:32:01</span>
-                    <span class="log-icon">⚠️</span>
-                    <span class="log-msg">Не удалось выполнить команду</span>
-                  </div>
-                  <div class="log-entry">
-                    <span class="log-time">12:08:45</span>
-                    <span class="log-icon">⚠️</span>
-                    <span class="log-msg">Прокси-сервер недоступен</span>
-                  </div>
-                </div>
-                <div class="logs-actions">
-                  <button class="logs-btn" type="button">Копировать логи</button>
-                  <button class="logs-btn" type="button">Очистить логи</button>
-                </div>
+            <div class="el-card">
+              <div class="el-label">Тег исключения</div>
+              <div class="tags-container">
+                <span class="tag">example.com<span class="tag-remove">×</span></span>
               </div>
             </div>
-          </div>
 
-          <!-- Язык -->
-          <div class="selector-group">
-            <span>Язык</span>
-            <div class="btn-group">
-              <button class="lang-btn" type="button">Русский</button>
-              <button class="lang-btn active" type="button">English</button>
-              <button class="lang-btn" type="button">Авто</button>
+            <div class="el-card">
+              <div class="el-label">Активная кнопка языка</div>
+              <div class="btn-group"><button class="lang-btn active" type="button">Русский</button></div>
             </div>
-          </div>
 
-          <!-- Эффекты -->
-          <div class="effects-group">
-            <div class="effect-row">
-              <span>Сезонные частицы</span>
-              <label class="toggle">
-                <input type="checkbox" checked>
-                <span class="toggle-track"><span class="toggle-thumb"></span></span>
-              </label>
+            <div class="el-card">
+              <div class="el-label">Неактивная кнопка языка</div>
+              <div class="btn-group"><button class="lang-btn" type="button">English</button></div>
             </div>
-            <div class="effect-row">
-              <span>Анимация включения</span>
-              <label class="toggle">
-                <input type="checkbox" checked>
-                <span class="toggle-track"><span class="toggle-thumb"></span></span>
-              </label>
+
+            <div class="el-card">
+              <div class="el-label">Лог-запись</div>
+              <div class="log-entry">
+                <span class="log-time">14:32:01</span>
+                <span class="log-icon">⚠️</span>
+                <span class="log-msg">Не удалось выполнить команду</span>
+              </div>
             </div>
-          </div>
 
-          <!-- Версия в настройках -->
-          <div class="settings-version">v0.0.0</div>
+            <div class="el-card">
+              <div class="el-label">Тост</div>
+              <div class="toast show demo-toast">
+                <span class="toast-icon">✅</span>
+                <span class="toast-text">Настройки сохранены</span>
+                <span class="toast-progress"></span>
+              </div>
+            </div>
 
-        </div>
-
-        <!-- Футер: таблетка + сезон + автор + кнопка помощи -->
-        <div class="popup-footer">
-          <div class="tabs">
-            <span class="tabs-indicator" id="fakeTabsIndicator" aria-hidden="true"></span>
-            <button class="tab-btn active" type="button" data-fake-tab="proxy">Прокси</button>
-            <button class="tab-btn" type="button" data-fake-tab="settings">Настройки</button>
-          </div>
-          <span class="season-indicator">🍂</span>
-          <span class="author">by Beccalviso</span>
-          <button class="help-btn" type="button">i</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Сравнение сезонов ===== -->
-  <h2 class="section-title">Сравнение сезонов</h2>
-  <div class="season-compare" id="seasonCompare"></div>
-
-  <!-- ===== Элементы интерфейса ===== -->
-  <h2 class="section-title">Элементы интерфейса</h2>
-  <div class="elements-preview theme-surface" id="elementsPreview">
-
-    <!-- Таблетка (Прокси) -->
-    <div class="el-card">
-      <div class="el-label">Таблетка (Прокси)</div>
-      <div class="tabs" data-indicator-auto>
-        <span class="tabs-indicator"></span>
-        <button class="tab-btn active" type="button">Прокси</button>
-        <button class="tab-btn" type="button">Настройки</button>
-      </div>
-    </div>
-
-    <!-- Таблетка (Настройки) -->
-    <div class="el-card">
-      <div class="el-label">Таблетка (Настройки)</div>
-      <div class="tabs" data-indicator-auto>
-        <span class="tabs-indicator"></span>
-        <button class="tab-btn" type="button">Прокси</button>
-        <button class="tab-btn active" type="button">Настройки</button>
-      </div>
-    </div>
-
-    <!-- Toggle — вкл -->
-    <div class="el-card">
-      <div class="el-label">Toggle — вкл</div>
-      <label class="toggle">
-        <input type="checkbox" checked>
-        <span class="toggle-track"><span class="toggle-thumb"></span></span>
-      </label>
-    </div>
-
-    <!-- Toggle — выкл -->
-    <div class="el-card">
-      <div class="el-label">Toggle — выкл</div>
-      <label class="toggle">
-        <input type="checkbox">
-        <span class="toggle-track"><span class="toggle-thumb"></span></span>
-      </label>
-    </div>
-
-    <!-- Аккордеон закрытый -->
-    <div class="el-card">
-      <div class="el-label">Аккордеон закрытый</div>
-      <div class="tile tile-wide">
-        <div class="tile-header"><span class="tile-title">ИСКЛЮЧЕНИЯ</span></div>
-      </div>
-    </div>
-
-    <!-- Аккордеон открытый -->
-    <div class="el-card">
-      <div class="el-label">Аккордеон открытый</div>
-      <div class="tile tile-wide">
-        <div class="tile-header"><span class="tile-title">ИСКЛЮЧЕНИЯ</span></div>
-        <div class="tile-body open" style="max-height:200px;padding:0.5rem 0.7rem 0.7rem;">
-          <div class="tag-input-row">
-            <input type="text" id="tagInput" placeholder="example.com">
-            <button class="add-tag-btn" type="button">+</button>
           </div>
         </div>
+      </section>
+
+      <!-- Сезонная печать — свёрнута -->
+      <section class="showcase-section collapsed" data-section="seals">
+        <button class="showcase-header" type="button">
+          <span>Сезонная печать</span>
+          <span class="showcase-chevron">▾</span>
+        </button>
+        <div class="showcase-body">
+          <div class="seal-states" id="sealStates">
+            <div class="seal-state-box theme-surface" data-seal-season="winter">
+              <div class="tile-seal" aria-hidden="true"></div>
+              <span class="state-label">Зима</span>
+            </div>
+            <div class="seal-state-box theme-surface" data-seal-season="spring">
+              <div class="tile-seal" aria-hidden="true"></div>
+              <span class="state-label">Весна</span>
+            </div>
+            <div class="seal-state-box theme-surface" data-seal-season="summer">
+              <div class="tile-seal" aria-hidden="true"></div>
+              <span class="state-label">Лето</span>
+            </div>
+            <div class="seal-state-box theme-surface" data-seal-season="autumn">
+              <div class="tile-seal" aria-hidden="true"></div>
+              <span class="state-label">Осень</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Сетка 24 часов — свёрнута -->
+      <section class="showcase-section collapsed" data-section="grid">
+        <button class="showcase-header" type="button">
+          <span>Сетка 24 часов</span>
+          <span class="showcase-chevron">▾</span>
+        </button>
+        <div class="showcase-body">
+          <div class="grid" id="grid"></div>
+        </div>
+      </section>
+
+      <!-- Состояния индикатора — свёрнута -->
+      <section class="showcase-section collapsed" data-section="indicators">
+        <button class="showcase-header" type="button">
+          <span>Состояния индикатора</span>
+          <span class="showcase-chevron">▾</span>
+        </button>
+        <div class="showcase-body">
+          <div class="indicator-states" id="indicatorStates">
+            <div class="indicator-state-box theme-surface proxy-on is-day">
+              <div class="status-indicator"></div>
+              <span class="state-label">ВКЛ / день</span>
+            </div>
+            <div class="indicator-state-box theme-surface proxy-on is-night">
+              <div class="status-indicator"></div>
+              <span class="state-label">ВКЛ / ночь</span>
+            </div>
+            <div class="indicator-state-box theme-surface is-day">
+              <div class="status-indicator"></div>
+              <span class="state-label">ВЫКЛ / день</span>
+            </div>
+            <div class="indicator-state-box theme-surface is-night">
+              <div class="status-indicator"></div>
+              <span class="state-label">ВЫКЛ / ночь</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================================
+       ПРАВАЯ КОЛОНКА: управление превью
+       ============================================================ -->
+  <aside class="preview-sidebar">
+
+    <!-- Время -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Время</div>
+      <div class="slider-wrap">
+        <input type="range" id="timeSlider" min="0" max="1439" step="1" value="720">
+        <span class="now-marker" id="nowMarker" aria-hidden="true"></span>
+      </div>
+      <div class="sidebar-row">
+        <span class="time-display" id="timeDisplay">12:00</span>
+        <button class="ctrl-btn" id="nowBtn" type="button">Сейчас</button>
+        <button class="ctrl-btn" id="playBtn" type="button">▶</button>
+      </div>
+      <div class="seasons">
+        <button class="season-btn" type="button" data-season="winter">Зима</button>
+        <button class="season-btn" type="button" data-season="spring">Весна</button>
+        <button class="season-btn" type="button" data-season="summer">Лето</button>
+        <button class="season-btn" type="button" data-season="autumn">Осень</button>
+      </div>
+      <div class="scheme-bar">
+        <span class="scheme-bar-label">Схема:</span>
+        <button type="button" class="scheme-preview-btn active" data-scheme="standard">Стандарт</button>
+        <button type="button" class="scheme-preview-btn" data-scheme="pastel">Пастель</button>
+        <button type="button" class="scheme-preview-btn" data-scheme="contrast">Контраст</button>
       </div>
     </div>
 
-    <!-- Поле ввода (focus) -->
-    <div class="el-card">
-      <div class="el-label">Поле ввода (focus)</div>
-      <div class="field">
-        <label>IP-адрес или домен</label>
-        <input type="text" value="127.0.0.1" placeholder=" " class="demo-focus">
+    <!-- Инфо -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Инфо</div>
+      <div class="info-bar">
+        <span id="infoTime">—</span>
+        <span class="info-sep">·</span>
+        <span id="infoSeason">—</span>
+        <span class="info-sep">·</span>
+        <span id="infoDayNight">—</span>
+        <span class="info-sep">·</span>
+        <span id="infoNextChange">—</span>
       </div>
     </div>
 
-    <!-- Кнопка «Сохранить» -->
-    <div class="el-card">
-      <div class="el-label">Кнопка «Сохранить»</div>
-      <button class="save-btn" type="button">Сохранить</button>
-    </div>
-
-    <!-- Тег исключения -->
-    <div class="el-card">
-      <div class="el-label">Тег исключения</div>
-      <div class="tags-container">
-        <span class="tag">example.com<span class="tag-remove">×</span></span>
+    <!-- Состояния -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Состояния</div>
+      <div class="sidebar-buttons">
+        <button class="dry-btn" type="button" data-action="state-on">ВКЛ</button>
+        <button class="dry-btn" type="button" data-action="state-off">ВЫКЛ</button>
+        <button class="dry-btn" type="button" data-action="state-error">ОШИБКА</button>
+        <button class="dry-btn" type="button" data-action="state-not-configured">НЕ НАСТРОЕНО</button>
+        <button class="dry-btn" type="button" data-action="state-empty-ip">ПУСТОЙ IP</button>
+        <button class="dry-btn" type="button" data-action="state-no-logs">НЕТ ЛОГОВ</button>
       </div>
     </div>
 
-    <!-- Активная кнопка языка -->
-    <div class="el-card">
-      <div class="el-label">Активная кнопка языка</div>
-      <div class="btn-group"><button class="lang-btn active" type="button">Русский</button></div>
-    </div>
-
-    <!-- Неактивная кнопка языка -->
-    <div class="el-card">
-      <div class="el-label">Неактивная кнопка языка</div>
-      <div class="btn-group"><button class="lang-btn" type="button">English</button></div>
-    </div>
-
-    <!-- Лог-запись -->
-    <div class="el-card">
-      <div class="el-label">Лог-запись</div>
-      <div class="log-entry">
-        <span class="log-time">14:32:01</span>
-        <span class="log-icon">⚠️</span>
-        <span class="log-msg">Не удалось выполнить команду</span>
+    <!-- Действия -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Действия</div>
+      <div class="sidebar-buttons">
+        <button class="dry-btn" type="button" data-action="save-settings">Сохранить настройки</button>
+        <button class="dry-btn" type="button" data-action="add-tag">Добавить исключение</button>
+        <button class="dry-btn" type="button" data-action="remove-tag">Удалить исключение</button>
+        <button class="dry-btn" type="button" data-action="ip">Обновить IP</button>
+        <button class="dry-btn" type="button" data-action="ping">Обновить пинг</button>
+        <button class="dry-btn" type="button" data-action="copy-ip">Копировать IP</button>
+        <button class="dry-btn" type="button" data-action="copy-address">Копировать адрес</button>
       </div>
     </div>
 
-    <!-- Тост -->
-    <div class="el-card">
-      <div class="el-label">Тост</div>
-      <div class="toast show demo-toast">
-        <span class="toast-icon">✅</span>
-        <span class="toast-text">Настройки сохранены</span>
-        <span class="toast-progress"></span>
+    <!-- Тосты -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Тосты</div>
+      <div class="sidebar-buttons">
+        <button class="dry-btn" type="button" data-action="toast-success">✅ Успех</button>
+        <button class="dry-btn" type="button" data-action="toast-error">⚠️ Ошибка</button>
+        <button class="dry-btn" type="button" data-action="toast-critical">❌ Критично</button>
+        <button class="dry-btn" type="button" data-action="toast-info">ℹ️ Инфо</button>
+      </div>
+      <div class="sidebar-buttons">
+        <button class="dry-btn" type="button" data-action="greet-morning">🌅 Утро</button>
+        <button class="dry-btn" type="button" data-action="greet-day">☀️ День</button>
+        <button class="dry-btn" type="button" data-action="greet-evening">🌇 Вечер</button>
+        <button class="dry-btn" type="button" data-action="greet-night">🌙 Ночь</button>
+        <button class="dry-btn" type="button" data-action="greet-auto">Авто</button>
       </div>
     </div>
 
+    <!-- Анимации -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Анимации</div>
+      <div class="sidebar-buttons">
+        <button class="dry-btn" type="button" data-action="joy-short">Joy короткая</button>
+        <button class="dry-btn" type="button" data-action="joy-long">Joy длинная</button>
+        <button class="dry-btn" type="button" data-action="tile-error">Ошибка плитки</button>
+      </div>
+    </div>
+
+    <!-- Туториал -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Туториал</div>
+      <div class="sidebar-buttons">
+        <button class="dry-btn" type="button" data-action="tutorial-welcome">Запустить welcome</button>
+        <button class="dry-btn" type="button" data-action="tutorial-settings">Запустить settings</button>
+        <button class="dry-btn" type="button" data-action="tutorial-close">Закрыть туториал</button>
+      </div>
+    </div>
+
+    <!-- Валидация -->
+    <div class="sidebar-block">
+      <div class="sidebar-label">Валидация</div>
+      <div class="sidebar-buttons">
+        <input type="text" id="dryValidateInput" class="dry-input" placeholder="example.com / 192.168.1.1">
+        <button class="dry-btn" type="button" data-action="validate">Проверить</button>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- ============================================================
+     Всплывающая панель логов + триггер
+     ============================================================ -->
+<button class="dry-log-toggle" id="dryLogToggle" type="button" title="Показать лог">📋</button>
+
+<div class="dry-log-panel" id="dryLogPanel">
+  <div class="dry-log-header">
+    <span class="dry-log-title" data-i18n="logPanelTitle">Лог тестов</span>
+    <button class="dry-log-clear" id="dryLogClear" type="button" data-i18n="clearLog">Очистить лог</button>
+    <button class="dry-log-close" id="dryLogClose" type="button" title="Закрыть">✕</button>
   </div>
+  <div class="dry-run-log" id="dryRunLog"></div>
+</div>
 
-  <!-- ===== Сезонная печать ===== -->
-  <h2 class="section-title">Сезонная печать</h2>
-  <div class="seal-states" id="sealStates">
-    <div class="seal-state-box theme-surface" data-seal-season="winter">
-      <div class="tile-seal" aria-hidden="true"></div>
-      <span class="state-label">Зима</span>
+<!-- Тост превью -->
+<div id="dryToast" class="toast" popover="manual">
+  <span class="toast-icon"></span>
+  <span class="toast-text"></span>
+  <span class="toast-progress"></span>
+</div>
+
+<!-- ============================================================
+     Туториал: оверлей, работает поверх всей страницы
+     ============================================================ -->
+<div id="tutorialOverlay" class="tutorial-overlay" style="display:none;">
+  <div class="tutorial-spotlight" id="tutorialSpotlight"></div>
+  <div class="tutorial-arrow" id="tutorialArrow"></div>
+  <div class="tutorial-box" id="tutorialBox">
+    <div class="tutorial-progress">
+      <div class="tutorial-progress-bar" id="tutorialProgressBar"></div>
     </div>
-    <div class="seal-state-box theme-surface" data-seal-season="spring">
-      <div class="tile-seal" aria-hidden="true"></div>
-      <span class="state-label">Весна</span>
+    <div class="tutorial-content" id="tutorialContent">
+      <span class="tutorial-icon" id="tutorialIcon">👋</span>
+      <div class="tutorial-texts">
+        <h2 id="tutorialTitle"></h2>
+        <p id="tutorialText"></p>
+      </div>
     </div>
-    <div class="seal-state-box theme-surface" data-seal-season="summer">
-      <div class="tile-seal" aria-hidden="true"></div>
-      <span class="state-label">Лето</span>
+    <div class="tutorial-nav">
+      <button class="tutorial-btn tutorial-prev" id="tutorialPrev" type="button"></button>
+      <div class="tutorial-dots" id="tutorialDots"></div>
+      <button class="tutorial-btn tutorial-next" id="tutorialNext" type="button"></button>
     </div>
-    <div class="seal-state-box theme-surface" data-seal-season="autumn">
-      <div class="tile-seal" aria-hidden="true"></div>
-      <span class="state-label">Осень</span>
-    </div>
+    <button class="tutorial-skip" id="tutorialSkip" type="button"></button>
   </div>
+</div>
 
-  <!-- ===== Сетка 24 часов ===== -->
-  <h2 class="section-title">Сетка 24 часов</h2>
-  <div class="grid" id="grid"></div>
-
-  <!-- ===== Состояния индикатора ===== -->
-  <h2 class="section-title">Состояния индикатора</h2>
-  <div class="indicator-states" id="indicatorStates">
-    <div class="indicator-state-box theme-surface proxy-on is-day">
-      <div class="status-indicator"></div>
-      <span class="state-label">ВКЛ / день</span>
-    </div>
-    <div class="indicator-state-box theme-surface proxy-on is-night">
-      <div class="status-indicator"></div>
-      <span class="state-label">ВКЛ / ночь</span>
-    </div>
-    <div class="indicator-state-box theme-surface is-day">
-      <div class="status-indicator"></div>
-      <span class="state-label">ВЫКЛ / день</span>
-    </div>
-    <div class="indicator-state-box theme-surface is-night">
-      <div class="status-indicator"></div>
-      <span class="state-label">ВЫКЛ / ночь</span>
-    </div>
-  </div>
-
-  <!-- ===== Тестовая панель (dry run) ===== -->
-  <h2 class="section-title">Тестовая панель (dry run)</h2>
-  <div class="dry-run" id="dryRun">
-
-    <!-- Группа 1. Тосты -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Тосты</div>
-      <div class="dry-run-buttons">
-        <button type="button" class="dry-btn" data-action="toast-success">✅ Успех</button>
-        <button type="button" class="dry-btn" data-action="toast-error">⚠️ Ошибка</button>
-        <button type="button" class="dry-btn" data-action="toast-critical">❌ Критично</button>
-        <button type="button" class="dry-btn" data-action="toast-info">ℹ️ Инфо</button>
-      </div>
-    </div>
-
-    <!-- Группа 2. Приветствия -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Приветствия</div>
-      <div class="dry-run-buttons">
-        <button type="button" class="dry-btn" data-action="greet-morning">🌅 Утро</button>
-        <button type="button" class="dry-btn" data-action="greet-day">☀️ День</button>
-        <button type="button" class="dry-btn" data-action="greet-evening">🌇 Вечер</button>
-        <button type="button" class="dry-btn" data-action="greet-night">🌙 Ночь</button>
-        <button type="button" class="dry-btn" data-action="greet-auto">По текущему времени</button>
-      </div>
-    </div>
-
-    <!-- Группа 3. Анимации плитки -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Анимации плитки</div>
-      <div class="dry-run-buttons">
-        <button type="button" class="dry-btn" data-action="joy-short">Joy короткая</button>
-        <button type="button" class="dry-btn" data-action="joy-long">Joy длинная</button>
-        <button type="button" class="dry-btn" data-action="tile-error">Ошибка плитки</button>
-      </div>
-    </div>
-
-    <!-- Группа 4. Пинг и IP -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Пинг и IP</div>
-      <div class="dry-run-buttons">
-        <button type="button" class="dry-btn" data-action="ping">Обновить пинг</button>
-        <button type="button" class="dry-btn" data-action="ip">Обновить IP</button>
-      </div>
-    </div>
-
-    <!-- Группа 5. Логи -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Логи</div>
-      <div class="dry-run-buttons">
-        <button type="button" class="dry-btn" data-action="log-add">Добавить лог</button>
-        <button type="button" class="dry-btn" data-action="log-clear">Очистить логи</button>
-      </div>
-    </div>
-
-    <!-- Группа 6. Вкладки -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Вкладки</div>
-      <div class="dry-run-buttons">
-        <button type="button" class="dry-btn" data-action="tab-proxy">Показать Прокси</button>
-        <button type="button" class="dry-btn" data-action="tab-settings">Показать Настройки</button>
-      </div>
-    </div>
-
-    <!-- Группа 7. Валидация -->
-    <div class="dry-run-group">
-      <div class="dry-run-group-title">Валидация</div>
-      <div class="dry-run-buttons">
-        <input type="text" id="dryValidateInput" class="dry-input" placeholder="example.com / 192.168.1.1 / *.example.com">
-        <button type="button" class="dry-btn" data-action="validate">Проверить</button>
-      </div>
-    </div>
-
-    <div class="dry-run-log" id="dryRunLog"></div>
-  </div>
-
-  <script src="themes.js"></script>
-  <script src="preview.js"></script>
+<script src="themes.js"></script>
+<script src="locales.js"></script>
+<script src="tutorial.js"></script>
+<script src="preview.js"></script>
 </body>
 </html>

@@ -7,6 +7,7 @@ const LOCALES = {
     greetingNight: 'Доброй ночи',
     statusOn: 'ВКЛЮЧЕН',
     statusOff: 'ВЫКЛЮЧЕН',
+    statusError: 'ОШИБКА',
     notConfigured: 'не настроено',
     yourIp: 'Ваш IP',
     exceptionsTitle: 'ИСКЛЮЧЕНИЯ',
@@ -80,7 +81,11 @@ const LOCALES = {
     updateDismiss: 'Скрыть',
     updateLatest: '✅ Установлена последняя версия',
     updateCheckBtn: 'Проверить обновления',
-    updateCheckError: '⚠️ Не удалось проверить обновления'
+    updateCheckError: '⚠️ Не удалось проверить обновления',
+    // === Панель логов превью ===
+    showLog: 'Показать лог',
+    clearLog: 'Очистить лог',
+    logPanelTitle: 'Лог тестов'
   },
   en: {
     proxyTitle: 'PROXY',
@@ -90,6 +95,7 @@ const LOCALES = {
     greetingNight: 'Good night',
     statusOn: 'ON',
     statusOff: 'OFF',
+    statusError: 'ERROR',
     notConfigured: 'not configured',
     yourIp: 'Your IP',
     exceptionsTitle: 'EXCEPTIONS',
@@ -163,7 +169,11 @@ const LOCALES = {
     updateDismiss: 'Dismiss',
     updateLatest: '✅ Latest version installed',
     updateCheckBtn: 'Check for updates',
-    updateCheckError: '⚠️ Could not check for updates'
+    updateCheckError: '⚠️ Could not check for updates',
+    // === Preview log panel ===
+    showLog: 'Show log',
+    clearLog: 'Clear log',
+    logPanelTitle: 'Test log'
   }
 };
 
